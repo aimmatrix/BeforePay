@@ -7,7 +7,8 @@ const assert=require('node:assert/strict');const path=require('node:path');const
  const worker=context.serviceWorkers()[0]||await context.waitForEvent('serviceworker');const page=await context.newPage();
  await page.goto('http://127.0.0.1:4173/demo/index.html?scenario=suspicious-shoes#checkout');await page.locator('.bp-panel[data-view="warning"]').waitFor();
  const cdp=await context.newCDPSession(page);const worlds=new Map();cdp.on('Runtime.executionContextCreated',({context})=>worlds.set(context.id,context));await cdp.send('Runtime.enable');let world;for(const ctx of worlds.values()){const r=await cdp.send('Runtime.evaluate',{contextId:ctx.id,expression:'Boolean(globalThis.BeforePayGuardian)',returnByValue:true});if(r.result.value)world=ctx.id;}assert.ok(world);
- const tabId=await worker.evaluate(async()=> (await chrome.tabs.query({})).find(t=>t.url?.includes('scenario=suspicious-shoes')).id);
+ const tabId=await worker.evaluate(async()=> (await chrome.tabs.query({active:true,currentWindow:true}))[0]?.id);
+ assert.ok(tabId,'active shopping tab is available');
  async function isolated(source){const r=await cdp.send('Runtime.evaluate',{contextId:world,expression:source,awaitPromise:true,returnByValue:true});assert.equal(r.exceptionDetails,undefined);return r.result.value;}
  await page.locator('.bp-panel').getByRole('button',{name:'Dismiss',exact:true}).focus();await page.keyboard.press('Escape');assert.equal(await page.locator('.bp-panel').isVisible(),false);
  assert.equal(await page.evaluate(()=>document.querySelector('#beforepay-root').shadowRoot.activeElement?.className),'bp-pip__figure');
@@ -19,7 +20,7 @@ const assert=require('node:assert/strict');const path=require('node:path');const
  const popup=await context.newPage();
  // Toolbar popup targets are not exposed by headless Playwright. Load the installed
  // extension popup document and supply its active shopping tab; all other APIs are real.
- await popup.addInitScript(({tabId})=>{const query=chrome.tabs.query.bind(chrome.tabs);chrome.tabs.query=async options=>options.active?[await chrome.tabs.get(tabId)]:query(options);},{tabId});
+ await popup.addInitScript(({tabId})=>{const query=chrome.tabs.query.bind(chrome.tabs);chrome.tabs.query=async options=>options.active?[{id:tabId,url:'http://127.0.0.1:4173/demo/index.html?scenario=suspicious-shoes#checkout'}]:query(options);},{tabId});
  await popup.goto(worker.url().replace('background.js','popup.html'));
  await popup.getByRole('button',{name:'Check this store',exact:true}).waitFor();
  console.log('Popup loaded');await popup.getByRole('button',{name:'Check this store',exact:true}).click();await popup.getByText('Pip opened on the current page.',{exact:true}).waitFor();

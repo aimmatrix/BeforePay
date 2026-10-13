@@ -1,7 +1,6 @@
 function scriptId(origin){return 'bp-'+origin.replace(/[^a-z0-9]/gi,'-');}
 async function scanTab(tabId){
-  const tab=await chrome.tabs.get(tabId);
-  if(!tab.url||!/^https?:\/\//.test(tab.url))throw new Error('This page cannot be inspected. Open a shopping website.');
+  if(!Number.isInteger(tabId))throw new Error('This page cannot be inspected. Open a shopping website.');
   await chrome.scripting.executeScript({target:{tabId},files:['content.js']});
   await chrome.scripting.executeScript({target:{tabId},func:()=>globalThis.BeforePayGuardian?.scan()});
 }

@@ -6,3 +6,7 @@ artifacts/
 
 extension/content.js
 extension/popup.js
+
+# Browser verification output
+tests/popup/screenshots/
+presentation/export/

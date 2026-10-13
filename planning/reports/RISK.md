@@ -111,3 +111,7 @@
 - Installed non-demo fixture: self-claimed identity remains unverified, HTTP transport warning remains, password/card values excluded, dismiss restores focus.
 - Extension load path: `/Users/ammad/Documents/FinTech/dist/extension`.
 - Existing commits and unrelated uncommitted work were preserved. No real third-party provider verification is claimed.
+
+- Additional popup action probe reached scan/rescan, keyboard focus, hide and motion persistence, but its optional-site revoke/regrant sequence times out on localhost. Localhost has required manifest host permission, so removing optional permission cannot make it manual. This probe is not counted as a passing full test; no remote provider was added.
+
+Final takeover verification: the corrected installed popup-document probe passed scan, motion and visible required-localhost permission-removal rejection. It no longer waits for an impossible revoke/regrant on required permissions. See docs/VALIDATION.md for remaining physical toolbar and remote prompt limits.

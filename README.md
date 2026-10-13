@@ -24,7 +24,7 @@ The installed extension was verified in isolated Chrome for Testing on desktop a
 
 The build explicitly selects `src/risk/index.js` for collectEvidence/evaluate, `src/pip/index.js`, `src/panel/index.js` and `src/popup/index.js`. Missing exports fail the build. `dist/build-report.json` records selections and source hashes.
 
-`npm test` discovers all test.js/mjs/cjs files. Final suite: **349 passed, 0 failed, 0 skipped, 0 todo**. Installed lifecycle coverage includes duplicate hints, iframe exclusion, scenario/navigation invalidation, cancellation and payment access. Separate browser checks:
+`npm test` discovers all test.js/mjs/cjs files. Final suite: **349 passed, 0 failed, 0 skipped, 0 todo**. The adversarial runner (`node tests/adversarial/run.mjs`) passed **214/214**, also with zero skips/todos. Installed lifecycle coverage includes duplicate hints, iframe exclusion, scenario/navigation invalidation, cancellation and payment access. Separate browser checks:
 
 ```sh
 node scripts/extension-smoke.cjs
