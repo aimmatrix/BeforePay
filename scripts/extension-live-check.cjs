@@ -1,0 +1,21 @@
+const {chromium}=require('/Users/ammad/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const path=require('node:path');const assert=require('node:assert/strict');
+(async()=>{
+ const extension=path.resolve('dist/extension');
+ const context=await chromium.launchPersistentContext('/tmp/beforepay-live-test-'+Date.now(),{channel:'chromium',headless:true,args:[`--disable-extensions-except=${extension}`,`--load-extension=${extension}`],viewport:{width:390,height:844},reducedMotion:'reduce'});
+ const page=await context.newPage();
+ await page.route('http://127.0.0.1:4174/shop/checkout',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><html data-demo-scenario="matching-shoes"><head><title>Unfamiliar shop</title></head><body><main><h1>100% Verified Official Store</h1><p>Canvas trainers £80</p><input type="password" value="SECRET_PASSWORD"><input name="card-number" value="SECRET_CARD"><button>Pay now</button></main><footer><a href="/contact">Contact</a><a href="/returns">Returns</a></footer></body></html>'}));
+ await page.goto('http://127.0.0.1:4174/shop/checkout');
+ await page.locator('#beforepay-root .bp-panel[data-view="uncertain"]').waitFor({timeout:10000});
+ console.log('Unknown page self-claimed verification stays uncertain');
+ assert.equal(await page.locator('#beforepay-root').count(),1);
+ const bodyText=await page.locator('#beforepay-root').innerText();
+ assert.equal(bodyText.includes('SECRET_PASSWORD'),false);assert.equal(bodyText.includes('SECRET_CARD'),false);
+ console.log('No password/card field values appear in evidence');
+ const dismiss=page.locator('#beforepay-root').getByRole('button',{name:'Dismiss',exact:true});
+ await dismiss.click();
+ assert.equal(await page.locator('#beforepay-root .bp-panel').isVisible(),false);
+ const focused=await page.evaluate(()=>document.querySelector('#beforepay-root').shadowRoot.activeElement?.tagName);
+ assert.equal(focused,'BUTTON');console.log('Dismiss returns keyboard focus to guardian');
+ await context.close();
+})().catch(e=>{console.error(e);process.exit(1);});

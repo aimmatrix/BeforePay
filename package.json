@@ -1,0 +1,14 @@
+{
+  "name": "beforepay-checkout-guardian",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "start": "node server.cjs",
+    "build": "node scripts/build.cjs",
+    "test": "node scripts/test.cjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  },
+  "type": "module"
+}
