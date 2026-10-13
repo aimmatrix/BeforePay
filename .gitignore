@@ -10,3 +10,5 @@ extension/popup.js
 # Browser verification output
 tests/popup/screenshots/
 presentation/export/
+
+release/
