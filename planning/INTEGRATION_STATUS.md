@@ -15,3 +15,7 @@ C4 may inspect the current overlay/checkout placement on the preview. Full Pip r
 Installed extension validation now passed in isolated Chrome for Testing 151: service worker loaded, automatic suspicious warning, one mount, desktop payment action unobstructed, dismissal persists through mutations, sample-only match on matching scenario, no page errors. Screenshot artifacts/installed-extension-checkout.png. Updated tests run across all agent-owned test directories; remaining known mismatches are described in TEST_FEEDBACK.md, so a full-suite green result is not claimed yet.
 
 The user confirmed both Opus sessions are actively building. CORE waits for their owned exports and avoids duplicating their implementation.
+
+RISK exports are landing. The evaluator's demo directory currently uses canonical port 4173. That server now serves dist/fixtures correctly, so final validation uses http://127.0.0.1:4173/demo/index.html and /dist/preview.html. The 4174 preview redirects to canonical 4173. Core now invokes collectEvidence with its default providers (no empty providers override). Pip is integrated from src/pip/index.js; desktop/mobile installed validation is being repeated against the delivered modules.
+
+FINAL: all delivered components integrated. 349/349 tests passed with no skips/todo. ZIP packaged. Canonical port 4173. See docs/VALIDATION.md; freeze SHA is published after the final integration commit.

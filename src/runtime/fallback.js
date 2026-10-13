@@ -1,27 +1,5 @@
-/** Temporary integration adapters used only while assigned components arrive. */
-export async function collectEvidence(observation) {
-  let synthetic=null;
-  try {const url=new URL(observation.pageKey);if(['http://127.0.0.1:4173','http://localhost:4173','http://127.0.0.1:4174','http://localhost:4174'].includes(url.origin)&&['/demo/index.html','/'].includes(url.pathname))synthetic=observation.demoScenarioId;}catch{}
-  const now=new Date().toISOString();
-  const evidence=[];
-  const add=(id,kind,status,sourceType,summary,detail)=>evidence.push({id,kind,status,sourceType,sourceLabel:sourceType==='synthetic'?'Fictional demo directory':'Visible page observation',sourceUrl:null,checkedAt:now,summary,detail});
-  if(synthetic) add('identity','identity',synthetic==='matching-shoes'?'matched':synthetic==='suspicious-shoes'?'mismatch':'unavailable','synthetic',synthetic==='matching-shoes'?'Demo identity matches':synthetic==='suspicious-shoes'?'Demo outlet identity differs':'Demo seller unverified','This is a fictional store and sample directory, not real certification.');
-  else add('identity','identity','not_checked','independent','Real seller identity is unverified','Independent store verification is not connected in this prototype.');
-  if(observation.paymentClaims.length) add('payment','payment','observed','page','Bank transfer only requested','Check the seller independently before transferring money.');
-  if(observation.advertisedDiscountPercent>=80) add('offer','offer','observed','page',`${observation.advertisedDiscountPercent}% discount advertised`,'Market prices have not been independently checked.');
-  for(const kind of ['returns','contact']) {
-    const found=observation.links.some(link=>new RegExp(kind==='returns'?'returns|refund':'contact','i').test(link.label+' '+link.pathname));
-    add(kind,kind,found?'observed':'unavailable','page',found?`${kind} link found`:`${kind} information not found`,'Visible links do not independently verify a seller. Information may be elsewhere on the site.');
-  }
-  for(const kind of ['reputation','domain']) add(kind,kind,'not_checked','independent',kind==='reputation'?'Independent reviews not checked':'Domain age and scam records not checked','No external evidence source is connected.');
-  return evidence;
-}
-export function evaluate(observation,evidence) {
-  const id=evidence.find(e=>e.kind==='identity'&&e.status==='mismatch')||evidence.find(e=>e.kind==='identity'&&e.sourceType!=='page')||evidence.find(e=>e.kind==='identity');
-  const warning=id?.status==='mismatch'||evidence.some(e=>['payment','offer'].includes(e.kind)&&e.status==='observed');
-  const matched=id?.sourceType==='synthetic'&&id.status==='matched';
-  return {schemaVersion:1,scanId:observation.scanId,pageKey:observation.pageKey,createdAt:new Date().toISOString(),mode:evidence.some(e=>e.sourceType==='synthetic')?'demo':'live',verdict:warning?'warning':matched?'no_flags':'uncertain',identityStatus:id?.status==='mismatch'?'mismatch':matched?'demo_match':'unverified',headline:warning?'Pause before you pay.':matched?'Demo identity matched.':'This seller is unverified.',summary:warning?'There are details worth checking independently before buying.':matched?'A sample directory match is not a guarantee of delivery or authenticity.':'More independent evidence is needed to establish who runs this store.',reasons:evidence.map(e=>({id:e.id,severity:e.status==='mismatch'||(['payment','offer'].includes(e.kind)&&e.status==='observed')?'warning':['unavailable','not_checked','error','stale'].includes(e.status)?'unknown':'info',title:e.summary,detail:e.detail,evidenceIds:[e.id]})),evidence,nextSteps:['Verify the seller using an independent source before deciding.'],limitations:[...evidence.filter(e=>['error','stale'].includes(e.status)).map(e=>`${e.kind} check is ${e.status}.`),'Provisional local evaluator while the risk component is integrated.','No real payments, bank verification or independent price comparison.']};
-}
+/** Legacy UI adapters retained for adversarial rendering tests. Risk uses the real modules. */
+export {collectEvidence, evaluate} from '../risk/index.js';
 export function mountPip(container,{onOpen,onDismiss,reducedMotion}) {
   const style=document.createElement('style');style.textContent=`.core-pip{border:1px solid #c6d1bd;border-radius:22px;background:#f5f8ee;color:#29372b;padding:13px 17px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 35px #16271a20;font:13px Arial;cursor:pointer}.core-shield{width:45px;height:50px;background:#c3d991;clip-path:polygon(0 0,100% 0,95% 65%,50% 100%,5% 65%);display:grid;place-items:center;font-size:22px;animation:core-float 3s ease-in-out infinite}.core-pip[data-state=warning] .core-shield{background:#eeb893}@keyframes core-float{50%{transform:translateY(-4px)}}@media(prefers-reduced-motion:reduce){.core-shield{animation:none}}`;
   const button=document.createElement('button');button.className='core-pip';button.setAttribute('aria-label','Open BeforePay findings');

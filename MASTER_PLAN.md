@@ -1,6 +1,6 @@
 # BeforePay: master plan for a coordinated agent build
 
-**Status: PLANNING ONLY. No agent is authorized by this document alone to begin implementation.** The user explicitly paused building. Begin only after a subsequent user kickoff. This plan supersedes the earlier invoice-led BUILD_BRIEF.md.
+**Status: BUILDING.** The user explicitly kicked off implementation and confirmed all agents use the shared FinTech folder. Exclusive file ownership applies; separate checkouts are waived for this sprint. Read planning/KICKOFF.md and planning/INTEGRATION_STATUS.md for current details. This plan supersedes the earlier invoice-led BUILD_BRIEF.md.
 
 ## Product decision
 

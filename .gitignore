@@ -3,3 +3,6 @@ dist/
 artifacts/
 .DS_Store
 *.log
+
+extension/content.js
+extension/popup.js

@@ -1,0 +1,21 @@
+const {chromium}=require('/Users/ammad/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const path=require('node:path');const assert=require('node:assert/strict');
+(async()=>{
+ const dir=path.resolve('dist/extension');
+ const context=await chromium.launchPersistentContext('/tmp/beforepay-mobile-test-'+Date.now(),{channel:'chromium',executablePath:require('./chrome-path.cjs'),headless:true,args:[`--disable-extensions-except=${dir}`,`--load-extension=${dir}`],viewport:{width:390,height:844},reducedMotion:'reduce'});
+ const page=await context.newPage();
+ await page.goto('http://127.0.0.1:4173/demo/index.html?scenario=suspicious-shoes#checkout');
+ await page.locator('#beforepay-root').locator('.bp-pip__figure').waitFor();
+ await page.waitForTimeout(250);
+ assert.equal(await page.locator('#beforepay-root .bp-panel').isVisible(),false);
+ console.log('Mobile checkout starts with compact guardian, evidence panel closed');
+ const pay=await page.locator('#simulate').boundingBox();const pip=await page.locator('#beforepay-root .bp-pip').boundingBox();
+ const overlap=pay&&pip&&pay.x<pip.x+pip.width&&pay.x+pay.width>pip.x&&pay.y<pip.y+pip.height&&pay.y+pay.height>pip.y;
+ assert.equal(Boolean(overlap),false);console.log('Mobile payment control is not covered by guardian');
+ await page.locator('#beforepay-root').locator('.bp-pip__figure').click();
+ await page.locator('#beforepay-root .bp-panel').waitFor();
+ await page.locator('#beforepay-root').getByRole('button',{name:'Dismiss',exact:true}).click();
+ assert.equal(await page.locator('#beforepay-root .bp-panel').isVisible(),false);
+ await page.screenshot({path:'artifacts/mobile-guardian.png',fullPage:true});
+ console.log('Mobile open/dismiss works with reduced motion');await context.close();
+})().catch(e=>{console.error(e);process.exit(1);});

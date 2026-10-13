@@ -7,7 +7,7 @@ async function scanTab(tabId){
 }
 chrome.runtime.onMessage.addListener((message,sender,respond)=>{
   // Only extension pages may request privileged actions.
-  if(sender.id!==chrome.runtime.id||sender.tab){respond({ok:false,message:'Unsupported caller.'});return;}
+  if(sender.id!==chrome.runtime.id||sender.url!==chrome.runtime.getURL('popup.html')){respond({ok:false,message:'Unsupported caller.'});return;}
   (async()=>{
     if(message.type==='SCAN_TAB')await scanTab(message.tabId);
     else if(message.type==='REGISTER_SITE'){

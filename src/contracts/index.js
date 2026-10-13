@@ -1,3 +1,4 @@
+import {isDemoObservation} from '../evidence/demo-directory.js';
 /** Contract v1: runtime boundary validators; see planning/CONTRACTS.md. */
 export const CONTRACT_VERSION = 1;
 export const VERDICTS = Object.freeze(['warning', 'uncertain', 'no_flags', 'error']);
@@ -15,7 +16,7 @@ export function pipState(assessment) {
 export function assessmentPolicyError(value, observation) {
   if(!isAssessment(value)) return 'The evaluator returned an incomplete response.';
   if(value.scanId!==observation.scanId || value.pageKey!==observation.pageKey) return 'The response belongs to a different page or scan.';
-  if(!observation.demoScenarioId && (value.mode==='demo' || value.identityStatus==='demo_match' || value.evidence.some(e=>e.sourceType==='synthetic'))) return 'Sample evidence cannot verify this real webpage.';
+  if(!isDemoObservation(observation) && (value.mode==='demo' || value.identityStatus==='demo_match' || value.evidence.some(e=>e.sourceType==='synthetic'))) return 'Sample evidence cannot verify this real webpage.';
   if(value.identityStatus==='verified' && !value.evidence.some(e=>e.kind==='identity' && e.status==='matched' && e.sourceType==='independent')) return 'Independent identity evidence is required.';
   return null;
 }

@@ -1,0 +1,78 @@
+[
+  {
+    "id": "suspicious-shoes",
+    "displayName": "Suspicious outlet",
+    "claimedBrand": "Solehouse",
+    "simulatedHostname": "solehouse-outlet.example",
+    "product": {
+      "name": "Studio Runner 01",
+      "price": 14,
+      "currency": "GBP",
+      "advertisedDiscountPercent": 90
+    },
+    "visibleClaims": [
+      "FINAL HOURS · 90% OFF THE STUDIO RUNNER · BANK TRANSFER ONLY",
+      "Reserve your pair today. Bank transfer only."
+    ],
+    "links": [
+      {
+        "label": "About the demo",
+        "hostname": "solehouse-outlet.example",
+        "pathname": "/about"
+      }
+    ],
+    "syntheticIdentityEvidence": [],
+    "expected": {
+      "verdict": "warning",
+      "identityStatus": "mismatch",
+      "reasonKinds": ["identity", "offer", "payment", "contact", "returns"]
+    }
+  },
+  {
+    "id": "matching-shoes",
+    "displayName": "Matching demo store",
+    "claimedBrand": "Solehouse",
+    "simulatedHostname": "solehouse.example",
+    "product": {
+      "name": "Studio Runner 01",
+      "price": 140,
+      "currency": "GBP",
+      "advertisedDiscountPercent": null
+    },
+    "visibleClaims": [
+      "THOUGHTFULLY DESIGNED. EVERY DAY, EVERYWHERE.",
+      "Sample seller · Cards accepted in this fictional scenario."
+    ],
+    "links": [
+      {
+        "label": "Contact",
+        "hostname": "solehouse.example",
+        "pathname": "/contact"
+      },
+      {
+        "label": "Returns & refunds",
+        "hostname": "solehouse.example",
+        "pathname": "/returns"
+      },
+      {
+        "label": "About the demo",
+        "hostname": "solehouse.example",
+        "pathname": "/about"
+      }
+    ],
+    "syntheticIdentityEvidence": [
+      {
+        "kind": "identity",
+        "status": "matched",
+        "sourceType": "synthetic",
+        "sourceLabel": "Sample Solehouse directory",
+        "summary": "Hostname matches the synthetic Solehouse directory entry."
+      }
+    ],
+    "expected": {
+      "verdict": "no_flags",
+      "identityStatus": "demo_match",
+      "reasonKinds": ["identity"]
+    }
+  }
+]

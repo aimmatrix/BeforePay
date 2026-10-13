@@ -1,6 +1,6 @@
 # CORE handoff — runtime and integration
 
-Status: core runtime built; integration in progress.
+Status: VERIFIED — integrated runtime, delivered components and packaged extension.
 Checkout: /Users/ammad/Documents/FinTech (shared, explicitly authorized by user).
 Baseline: 3b8da96. Contract v1 frozen.
 
@@ -21,3 +21,5 @@ Load unpacked: /Users/ammad/Documents/FinTech/dist/extension
 Existing server 4173 preserved. Don't restart servers or modify other agents' owned files without transfer.
 
 Optional independent reputation APIs are cut for the sprint per S5 research. Real stores have no independent identity verification until a suitable source is connected. No real payment occurs.
+
+Final result: 349/349 tests passed, no skipped/todo cases, including actual isolated Chromium extension tests. Product bundle selects RISK/PIP/C2/C3, no temporary adapters. See docs/VALIDATION.md.

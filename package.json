@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node server.cjs",
     "build": "node scripts/build.cjs",
-    "test": "node scripts/test.cjs"
+    "test": "node scripts/test.cjs",
+    "package": "node scripts/package.cjs"
   },
   "devDependencies": {
     "esbuild": "^0.28.2"

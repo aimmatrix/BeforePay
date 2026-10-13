@@ -2,14 +2,14 @@ const {chromium}=require('/Users/ammad/.cache/codex-runtimes/codex-primary-runti
 const path=require('node:path');const assert=require('node:assert/strict');const fs=require('node:fs');
 (async()=>{
  const extension=path.resolve('dist/extension');
- const context=await chromium.launchPersistentContext('/tmp/beforepay-extension-profile-'+Date.now(),{channel:'chromium',headless:true,args:[`--disable-extensions-except=${extension}`,`--load-extension=${extension}`],viewport:{width:1440,height:980}});
+ const context=await chromium.launchPersistentContext('/tmp/beforepay-extension-profile-'+Date.now(),{channel:'chromium',executablePath:require('./chrome-path.cjs'),headless:true,args:[`--disable-extensions-except=${extension}`,`--load-extension=${extension}`],viewport:{width:1440,height:980}});
  const worker=context.serviceWorkers()[0]||await context.waitForEvent('serviceworker',{timeout:15000});
  console.log('Actual extension worker:',worker.url());
  const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto('http://127.0.0.1:4174/demo/index.html?scenario=suspicious-shoes');
+ await page.goto('http://127.0.0.1:4173/demo/index.html?scenario=suspicious-shoes');
  await page.waitForSelector('#beforepay-root');
  await page.click('#checkout-button');
- await page.locator('#beforepay-root').getByText('Pause before you pay.',{exact:true}).first().waitFor({timeout:10000});
+ await page.locator('#beforepay-root .bp-panel[data-view="warning"]').waitFor({timeout:10000});
  const status=await page.locator('#beforepay-root .bp-panel').getAttribute('data-view');
  assert.equal(status,'warning');console.log('Installed extension suspicious checkout:',status);
  assert.equal(await page.locator('#beforepay-root').count(),1);
@@ -20,11 +20,15 @@ const path=require('node:path');const assert=require('node:assert/strict');const
  await page.evaluate(()=>{const el=document.createElement('span');el.textContent='checkout update';document.body.append(el);});
  await page.waitForTimeout(350);assert.equal(await page.locator('#beforepay-root .bp-panel').isVisible(),false);
  console.log('Dismissal survives page mutations');
- await page.goto('http://127.0.0.1:4174/demo/index.html?scenario=matching-shoes#checkout');
+ await page.goto('http://127.0.0.1:4173/demo/index.html?scenario=matching-shoes#checkout');
  await page.locator('#beforepay-root .bp-panel[data-view="demo-match"]').waitFor({timeout:10000});
- console.log('Installed extension matching checkout: sample-only identity match');
+ assert.match(await page.locator('#beforepay-root .bp-panel').innerText(),/sample|synthetic|demo/i);
+ console.log('Installed extension matching checkout: visibly labelled sample-only identity match');
+ await page.goto('http://127.0.0.1:4173/demo/index.html?scenario=unknown-shoes#checkout');
+ await page.locator('#beforepay-root .bp-panel[data-view="uncertain"]').waitFor({timeout:10000});
+ console.log('Installed extension unknown checkout: uncertain');
  await page.screenshot({path:'artifacts/installed-extension-checkout.png',fullPage:true});
  console.log('Page errors:',errors);assert.deepEqual(errors,[]);
- fs.writeFileSync('artifacts/extension-test-result.json',JSON.stringify({testedAt:new Date().toISOString(),worker:worker.url(),checks:['Actual unpacked extension loaded','Automatic suspicious checkout warning','Single guardian mount','Desktop payment action unobstructed','Dismissal survives mutations','Sample identity match labelled'],pageErrors:errors},null,2));
+ fs.writeFileSync('artifacts/extension-test-result.json',JSON.stringify({testedAt:new Date().toISOString(),worker:worker.url(),checks:['Actual unpacked extension loaded','Automatic suspicious checkout warning','Single guardian mount','Desktop payment action unobstructed','Dismissal survives mutations','Sample identity match visibly labelled','Unknown scenario uncertain'],pageErrors:errors},null,2));
  await context.close();
 })().catch(e=>{console.error(e);process.exit(1);});

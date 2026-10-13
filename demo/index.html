@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en" data-beforepay-demo="true" data-demo-scenario="suspicious-shoes" data-simulated-hostname="solehouse-outlet.example">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solehouse · BeforePay demo</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body data-checkout="false">
+  <div class="demo-bar">
+    <p class="demo-bar-copy">
+      <span class="demo-dot" aria-hidden="true"></span>
+      <span>BeforePay playground</span>
+      <strong>Fictional stores. No real payments.</strong>
+    </p>
+    <div class="scenarios" role="group" aria-label="Choose demo scenario">
+      <button type="button" data-scenario="suspicious-shoes">Suspicious outlet</button>
+      <button type="button" data-scenario="matching-shoes">Matching demo store</button>
+    </div>
+  </div>
+
+  <header class="store-header">
+    <a class="wordmark" id="wordmark" href="index.html?scenario=suspicious-shoes">solehouse<span>®</span></a>
+    <nav aria-label="Store navigation">
+      <span>New arrivals</span>
+      <span>Everyday essentials</span>
+      <span>The collection</span>
+    </nav>
+    <span class="bag">Bag <b>1</b></span>
+  </header>
+
+  <p class="announcement" id="announcement"></p>
+
+  <main>
+    <section id="product-view">
+      <p class="breadcrumb">The everyday collection <span>/</span> <span id="crumb-name">Studio Runner 01</span></p>
+      <div class="product-layout">
+        <div class="product-art">
+          <div class="art-top">
+            <span>Made for your<br>everyday detour.</span>
+            <span>01 / 03</span>
+          </div>
+          <span class="giant-type" aria-hidden="true">RUN<br>WITH IT.</span>
+          <svg class="shoe" viewBox="0 0 720 410" role="img" aria-label="Illustration of a cream and burnt-orange trainer">
+            <defs>
+              <linearGradient id="upper" x1="0" y1="0" x2=".7" y2="1">
+                <stop stop-color="#fffdf4"/>
+                <stop offset="1" stop-color="#cdc5b6"/>
+              </linearGradient>
+              <linearGradient id="sole" x1="0" y1="0" x2="0" y2="1">
+                <stop stop-color="#fffef9"/>
+                <stop offset="1" stop-color="#c9bcaa"/>
+              </linearGradient>
+              <filter id="shadow"><feGaussianBlur stdDeviation="13"/></filter>
+            </defs>
+            <ellipse cx="355" cy="341" rx="275" ry="23" fill="#6e6048" opacity=".2" filter="url(#shadow)"/>
+            <g transform="rotate(-12 360 220)">
+              <path d="M84 259Q95 208 118 161L159 83Q186 82 214 110L276 160Q337 191 403 205L564 235Q620 242 648 277L645 303Q508 334 177 312Q105 306 78 288Z" fill="url(#upper)" stroke="#bcb3a4" stroke-width="2"/>
+              <path d="M100 197L125 150L160 92Q187 91 209 117L247 152L215 176L173 157L148 216Z" fill="#a94c31"/>
+              <path d="M119 153L157 96Q178 94 207 122L181 139L155 129L139 168Z" fill="#693e31"/>
+              <path d="M255 157L289 145L405 209L368 229Z" fill="#e4dccc" stroke="#bbb09e" stroke-width="2"/>
+              <path d="M211 198Q295 250 468 242L413 267Q304 272 213 230Z" fill="#a94c31"/>
+              <path d="M411 209L534 232Q566 252 563 280L507 291L437 268Z" fill="#d7cbb8" stroke="#b6aa98" stroke-width="2"/>
+              <path d="M94 259Q254 307 646 277L655 299Q638 326 529 333L161 324Q98 318 77 295Z" fill="url(#sole)" stroke="#b8aa97" stroke-width="2"/>
+              <path d="M80 296Q260 344 651 303L644 317Q390 358 120 332L80 315Z" fill="#9a6645"/>
+              <g stroke="#fffdf4" stroke-width="9" stroke-linecap="round">
+                <path d="M252 172L283 161"/>
+                <path d="M274 185L305 176"/>
+                <path d="M299 198L330 189"/>
+                <path d="M324 210L355 202"/>
+                <path d="M348 222L381 216"/>
+              </g>
+              <g fill="#948b7b">
+                <circle cx="460" cy="240" r="2"/>
+                <circle cx="474" cy="244" r="2"/>
+                <circle cx="488" cy="248" r="2"/>
+                <circle cx="458" cy="252" r="2"/>
+                <circle cx="473" cy="256" r="2"/>
+                <circle cx="488" cy="260" r="2"/>
+              </g>
+              <path d="M171 178L144 240M203 188L186 252M563 253L594 264" fill="none" stroke="#b5aa97" stroke-width="2"/>
+            </g>
+          </svg>
+          <div class="art-bottom">
+            <span>Designed to go places.</span>
+            <span>The Studio Runner</span>
+          </div>
+        </div>
+
+        <div class="product-copy">
+          <p class="eyebrow">The everyday collection / unisex</p>
+          <h1>Good shoes.<br>Great detours.</h1>
+          <p class="product-name"><span id="product-name">Studio Runner 01</span> <span>Oat / Terracotta</span></p>
+          <div class="price">
+            <strong id="price"></strong>
+            <del id="old-price" hidden></del>
+            <span id="discount" hidden></span>
+          </div>
+          <p class="description">For the long way home. A soft everyday runner with a sculpted sole, warm earth tones, and a little room for spontaneity.</p>
+          <p class="size-label">Choose your size <span>UK sizing</span></p>
+          <div class="sizes" role="group" aria-label="Shoe size">
+            <button type="button" aria-pressed="false">5</button>
+            <button type="button" aria-pressed="false">6</button>
+            <button type="button" class="selected" aria-pressed="true">7</button>
+            <button type="button" aria-pressed="false">8</button>
+            <button type="button" aria-pressed="false">9</button>
+            <button type="button" aria-pressed="false">10</button>
+          </div>
+          <button type="button" class="checkout-button" id="checkout-button">Continue to checkout <span aria-hidden="true">↗</span></button>
+          <p class="payment-note" id="payment-note"></p>
+          <div class="product-details">
+            <span>01 &nbsp; All-day comfort</span>
+            <span>02 &nbsp; A considered silhouette</span>
+            <span>03 &nbsp; Your next everyday pair</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="checkout-view" hidden>
+      <button type="button" id="back" class="back">← Back to the shoes</button>
+      <div class="checkout-layout">
+        <div class="checkout-copy">
+          <p class="eyebrow">One last thing</p>
+          <h1>Your next<br>everyday pair.</h1>
+          <div class="checkout-box">
+            <p class="eyebrow">Order summary</p>
+            <div class="order-line">
+              <div class="mini-shoe" aria-hidden="true"></div>
+              <div>
+                <strong id="order-name">Studio Runner 01</strong>
+                <p>Oat / Terracotta · UK <span id="order-size">7</span></p>
+              </div>
+              <strong id="order-price"></strong>
+            </div>
+            <div class="totals">
+              <span>Delivery</span>
+              <span>Included</span>
+            </div>
+            <div class="totals total">
+              <span>Total</span>
+              <strong id="total"></strong>
+            </div>
+          </div>
+        </div>
+        <div class="payment-box">
+          <p class="eyebrow">Demo checkout</p>
+          <h2>A moment before<br>you pay.</h2>
+          <p>This is a fictional checkout. No card details are collected and no money will move.</p>
+          <p class="payment-method" id="payment-method"></p>
+          <button type="button" class="checkout-button" id="simulate">Simulate purchase <span aria-hidden="true">↗</span></button>
+          <p class="simulation-status" id="simulation-status" role="status"></p>
+          <div class="guardian-hint">
+            <span aria-hidden="true">Pip</span>
+            <p>BeforePay may show Pip, a small guardian, near this corner. The shop does not verify itself.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      <span>solehouse®</span>
+      <small>A fictional store for the BeforePay demo</small>
+      <small class="host">Sample host <span id="simulated-host"></span></small>
+    </p>
+    <div id="footer-links"></div>
+  </footer>
+
+  <dialog id="info-dialog" aria-labelledby="info-title">
+    <button type="button" id="close-dialog" aria-label="Close">×</button>
+    <h2 id="info-title"></h2>
+    <p id="info-text"></p>
+  </dialog>
+</body>
+</html>

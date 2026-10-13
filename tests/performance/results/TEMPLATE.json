@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 2,
+  "taskId": "S4",
+  "status": "not-run",
+  "baselineSha": "3b8da96",
+  "frozenSha": null,
+  "measuredAt": null,
+  "buildReport": {
+    "copiedFrom": "dist/build-report.json",
+    "path": "tests/performance/results/extension/build-report.json",
+    "builtAt": null,
+    "components": null,
+    "sourceHashes": null
+  },
+  "environment": {
+    "os": null,
+    "node": null,
+    "chrome": null,
+    "extensionId": null,
+    "unpackedPath": "/Users/ammad/Documents/FinTech/dist/extension",
+    "demoUrl": "http://127.0.0.1:4174/demo/index.html",
+    "reducedMotion": null
+  },
+  "extension": {
+    "scanAwaitMs": {
+      "method": "await BeforePayGuardian.scan(); DOM update (panel.update + pip.update returned); not first paint; 5 runs min/median/max",
+      "suspicious": null,
+      "matching": null,
+      "rescan": null
+    },
+    "renderAfterScanMs": {
+      "method": "double requestAnimationFrame after scan promise settled; separate from scanAwaitMs",
+      "suspicious": null,
+      "matching": null
+    },
+    "mounts": {
+      "productPage": null,
+      "checkout": null,
+      "afterToggle3x": null,
+      "afterRescanBurst": null,
+      "afterDestroy": null
+    },
+    "observers": {
+      "idle10sScanIdDelta": null,
+      "tenPageMutationsScanIdDelta": null,
+      "afterDismissMutationsScanIdDelta": null
+    },
+    "network": {
+      "harPath": "tests/performance/results/extension/demo.har",
+      "originsSeen": [],
+      "unexpected": []
+    },
+    "dependencies": {
+      "inventoryPath": "tests/performance/results/extension/inventory.json",
+      "runtimePackages": [],
+      "findings": []
+    }
+  },
+  "preview": {
+    "notes": "Informational only. Do not copy these into extension tables. Preview is not evidence the extension works.",
+    "url": "http://127.0.0.1:4174/dist/preview.html",
+    "scanAwaitMs": null,
+    "renderAfterScanMs": null,
+    "mounts": null,
+    "network": {
+      "harPath": "tests/performance/results/preview/demo.har"
+    }
+  }
+}

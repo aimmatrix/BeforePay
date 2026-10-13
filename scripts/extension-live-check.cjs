@@ -2,13 +2,16 @@ const {chromium}=require('/Users/ammad/.cache/codex-runtimes/codex-primary-runti
 const path=require('node:path');const assert=require('node:assert/strict');
 (async()=>{
  const extension=path.resolve('dist/extension');
- const context=await chromium.launchPersistentContext('/tmp/beforepay-live-test-'+Date.now(),{channel:'chromium',headless:true,args:[`--disable-extensions-except=${extension}`,`--load-extension=${extension}`],viewport:{width:390,height:844},reducedMotion:'reduce'});
+ const context=await chromium.launchPersistentContext('/tmp/beforepay-live-test-'+Date.now(),{channel:'chromium',executablePath:require('./chrome-path.cjs'),headless:true,args:[`--disable-extensions-except=${extension}`,`--load-extension=${extension}`],viewport:{width:390,height:844},reducedMotion:'reduce'});
  const page=await context.newPage();
- await page.route('http://127.0.0.1:4174/shop/checkout',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><html data-demo-scenario="matching-shoes"><head><title>Unfamiliar shop</title></head><body><main><h1>100% Verified Official Store</h1><p>Canvas trainers £80</p><input type="password" value="SECRET_PASSWORD"><input name="card-number" value="SECRET_CARD"><button>Pay now</button></main><footer><a href="/contact">Contact</a><a href="/returns">Returns</a></footer></body></html>'}));
- await page.goto('http://127.0.0.1:4174/shop/checkout');
- await page.locator('#beforepay-root .bp-panel[data-view="uncertain"]').waitFor({timeout:10000});
- console.log('Unknown page self-claimed verification stays uncertain');
+ await page.route('http://127.0.0.1:4173/shop/checkout',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><html data-demo-scenario="matching-shoes"><head><title>Unfamiliar shop</title></head><body><main><h1>100% Verified Official Store</h1><p>Canvas trainers £80</p><input type="password" value="SECRET_PASSWORD"><input name="card-number" value="SECRET_CARD"><button>Pay now</button></main><footer><a href="/contact">Contact</a><a href="/returns">Returns</a></footer></body></html>'}));
+ await page.goto('http://127.0.0.1:4173/shop/checkout');
+ await page.locator('#beforepay-root .bp-pip[data-state="warning"]').waitFor({timeout:10000});
+ await page.locator('.bp-pip__figure').click();
+ await page.locator('#beforepay-root .bp-panel[data-view="warning"]').waitFor({timeout:10000});
+ console.log('HTTP page warns about transport; self-claimed verification stays unverified');
  assert.equal(await page.locator('#beforepay-root').count(),1);
+ assert.match(await page.locator('.bp-panel').innerText(), /unverified|not verified/i);
  const bodyText=await page.locator('#beforepay-root').innerText();
  assert.equal(bodyText.includes('SECRET_PASSWORD'),false);assert.equal(bodyText.includes('SECRET_CARD'),false);
  console.log('No password/card field values appear in evidence');

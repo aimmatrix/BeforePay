@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pip component preview</title>
+<style>
+  :root { color-scheme: light; --ink: #1E2722; --paper: #F4F2EA; --line: #DDD7C8; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif; }
+  header { padding: 20px 24px 12px; border-bottom: 1px solid var(--line); }
+  header h1 { margin: 0 0 4px; font-size: 22px; }
+  header p { margin: 0; color: #4A554E; }
+  .note { display: inline-block; margin-top: 8px; padding: 3px 8px; border-radius: 6px; background: #FFF3CC; color: #5C4500; font-size: 13px; }
+  main { padding: 20px 24px 200px; display: flex; flex-direction: column; gap: 28px; }
+  fieldset { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+  legend { font-weight: 700; padding: 0 4px; }
+  button.state { min-height: 40px; padding: 0 12px; border-radius: 8px; border: 1.5px solid #B9B2A0; background: #FFFDF8; color: var(--ink); font: inherit; cursor: pointer; }
+  button.state[aria-pressed="true"] { background: var(--ink); color: #FFFFFF; border-color: var(--ink); }
+  label { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; max-width: 100%; }
+  input[type="text"] { min-height: 36px; width: min(320px, 100%); padding: 0 8px; border: 1px solid #B9B2A0; border-radius: 6px; font: inherit; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
+  .cell { background: #FFFDF8; border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .cell code { font-size: 12px; }
+  #log { font: 13px ui-monospace, monospace; color: #3F5A43; min-height: 1.4em; }
+  /* Emulates CORE's fixed bottom-right host. */
+  #dock { position: fixed; right: 18px; bottom: 18px; max-width: calc(100vw - 28px); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Pip component preview</h1>
+  <p>mountPip from src/pip/index.js, mounted in a Shadow DOM like CORE's host. Copy below is sample text; Pip makes no findings.</p>
+  <span class="note">Preview only: this is not the installed extension and checks no store.</span>
+</header>
+<main>
+  <fieldset id="states"><legend>PipView.state</legend></fieldset>
+  <fieldset>
+    <legend>View</legend>
+    <label>label <input type="text" id="label"></label>
+    <label>message <input type="text" id="message"></label>
+    <label><input type="checkbox" id="expanded"> expanded (panel open)</label>
+    <label><input type="checkbox" id="still"> reducedMotion</label>
+    <button type="button" class="state" id="hostile">Hostile copy</button>
+  </fieldset>
+  <div id="log" role="status"></div>
+  <section aria-labelledby="gallery-title">
+    <h2 id="gallery-title" style="font-size:17px;margin:0 0 10px">All states (figure only)</h2>
+    <div class="gallery" id="gallery"></div>
+  </section>
+</main>
+<div id="dock"></div>
+<script type="module" src="./preview.js"></script>
+</body>
+</html>

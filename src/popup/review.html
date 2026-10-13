@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BeforePay popup review</title>
+    <style>
+      body {
+        margin: 0;
+        background: #e8e4d8;
+        color: #1e2a24;
+        font: 14px/1.45 ui-sans-serif, system-ui, sans-serif;
+      }
+      #shell {
+        display: flex;
+        gap: 16px;
+        padding: 16px;
+        align-items: flex-start;
+      }
+      #app {
+        width: 360px;
+        min-height: 180px;
+        background: #f7f8f2;
+        border: 1px solid #d3d6c8;
+      }
+      #controls {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-width: 22rem;
+      }
+      #controls button {
+        min-height: 44px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="shell">
+      <main id="app" aria-label="Extension popup"></main>
+      <aside id="controls">
+        <p>Fixture states for accessibility review. Same <code>mountPopup</code> as the extension.</p>
+        <button type="button" data-fix="manual">This tab only</button>
+        <button type="button" data-fix="granted">Access granted</button>
+        <button type="button" data-fix="unsupported">Unsupported page</button>
+        <button type="button" data-fix="busy">Checking</button>
+        <button type="button" data-fix="error">Runtime error</button>
+        <button type="button" data-fix="denied">Permission denied</button>
+      </aside>
+    </div>
+    <script type="module">
+      import { mountPopup } from './index.js';
+
+      const fixtures = {
+        manual: {
+          supported: true,
+          originLabel: 'unfamiliar-shoes.example',
+          siteAccess: 'manual',
+          motion: 'system',
+          busy: false,
+          error: null
+        },
+        granted: {
+          supported: true,
+          originLabel: 'unfamiliar-shoes.example',
+          siteAccess: 'granted',
+          motion: 'system',
+          busy: false,
+          error: null
+        },
+        unsupported: {
+          supported: false,
+          originLabel: 'Page not supported',
+          siteAccess: 'manual',
+          motion: 'system',
+          busy: false,
+          error: null
+        },
+        busy: {
+          supported: true,
+          originLabel: 'unfamiliar-shoes.example',
+          siteAccess: 'manual',
+          motion: 'reduced',
+          busy: true,
+          error: null
+        },
+        error: {
+          supported: true,
+          originLabel: 'unfamiliar-shoes.example',
+          siteAccess: 'manual',
+          motion: 'system',
+          busy: false,
+          error: 'The last check did not finish. Try again on this page.'
+        },
+        denied: {
+          supported: true,
+          originLabel: 'unfamiliar-shoes.example',
+          siteAccess: 'manual',
+          motion: 'system',
+          busy: false,
+          error: 'Site access was declined. Manual checking remains available.'
+        }
+      };
+
+      let current = { ...fixtures.manual };
+      const ui = mountPopup(document.getElementById('app'), {
+        async onAction(action) {
+          if (action.type === 'SET_MOTION') current = { ...current, motion: action.value, error: null };
+          if (action.type === 'SCAN_ACTIVE_TAB') {
+            return {
+              ok: true,
+              state: { ...current, busy: false },
+              message: 'Pip opened on the current page.'
+            };
+          }
+          if (action.type === 'REQUEST_SITE_ACCESS') {
+            current = {
+              ...current,
+              error: 'Site access was declined. Manual checking remains available.'
+            };
+            return { ok: false, state: current, message: current.error };
+          }
+          if (action.type === 'REMOVE_SITE_ACCESS') {
+            current = { ...current, siteAccess: 'manual', error: null };
+          }
+          return { ok: true, state: current, message: null };
+        }
+      });
+      ui.update(current);
+
+      document.querySelectorAll('#controls button').forEach((button) => {
+        button.addEventListener('click', () => {
+          current = { ...fixtures[button.dataset.fix] };
+          ui.update(current);
+        });
+      });
+    </script>
+  </body>
+</html>

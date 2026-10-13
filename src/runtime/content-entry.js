@@ -5,13 +5,13 @@ import {assessmentPolicyError,pipState} from '../contracts/index.js';
 
 (() => {
   if(globalThis.BeforePayGuardian) return;
-  const host=document.createElement('div');host.id='beforepay-root';host.setAttribute('data-beforepay-root','');
+  const host=document.createElement('div');host.id='beforepay-root';if(globalThis.BeforePayPreviewShim)host.setAttribute('data-beforepay-preview','true');host.setAttribute('data-beforepay-root','');
   host.style.cssText='all:initial!important;position:fixed!important;right:18px!important;bottom:18px!important;z-index:2147483646!important;max-width:calc(100vw - 28px)!important;pointer-events:auto!important;';
   const shadow=host.attachShadow({mode:'open'});
   const style=document.createElement('style');style.textContent=':host{color-scheme:light}*{box-sizing:border-box}button:focus-visible{outline:3px solid #915536;outline-offset:4px}.bp-layout{display:flex;flex-direction:column;align-items:flex-end;max-width:calc(100vw - 28px)}';
   const layout=document.createElement('div');layout.className='bp-layout';
   const panelRoot=document.createElement('div'),pipRoot=document.createElement('div');panelRoot.style.cssText='width:min(380px,calc(100vw - 36px));margin-bottom:12px';layout.append(panelRoot,pipRoot);shadow.append(style,layout);document.documentElement.append(host);
-  let assessment=null,open=false,dismissedKey=null,lastContext=null,observerTimer=null;
+  let assessment=null,open=false,dismissedKey=null,lastContext=null,observerTimer=null,expandRequested=true;
   const getKey=()=>location.origin+location.pathname+'|'+location.search+'|'+location.hash;
   const motion=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
   let pip;
@@ -20,30 +20,30 @@ import {assessmentPolicyError,pipState} from '../contracts/index.js';
   function close(){open=false;dock(false);panel.setOpen(false);pip.update({state:assessment?pipState(assessment):'idle',label:assessment?'Check details':'Meet Pip',message:assessment?.summary||'A second opinion before you pay.',expanded:false});dismissedKey=getKey();restoreFocus();}
   function show(){open=true;dock(true);panel.setOpen(true);pip.update({state:assessment?pipState(assessment):'checking',label:assessment?.headline||'Checking this store',message:assessment?.summary||'',expanded:true});}
   const panel=mountPanel(panelRoot,{onRescan:()=>scan(),onDismiss:close});
-  pip=mountPip(pipRoot,{onOpen:()=>assessment?show():scan(),onDismiss:()=>{close();pip.update({state:'dismissed',label:'',message:'',expanded:false});},reducedMotion:motion()});
+  pip=mountPip(pipRoot,{onOpen:()=>assessment?show():scan(),onDismiss:()=>{close();pip.update({state:'dismissed',label:'',message:'',expanded:false});const control=[...document.querySelectorAll('button,a[href],input[type="submit"],[tabindex="0"]')].find(el=>!host.contains(el)&&el.getClientRects().length>0&&!el.disabled&&getComputedStyle(el).visibility!=='hidden');control?.focus({preventScroll:true});},reducedMotion:motion()});
   pip.update({state:'idle',label:'Meet Pip',message:'A second opinion before you pay.',expanded:false});
-  function fail(error){assessment={schemaVersion:1,scanId:'error',pageKey:location.origin+location.pathname,createdAt:new Date().toISOString(),mode:demoScenario(new URL(location.href))?'demo':'live',verdict:'error',identityStatus:'unverified',headline:'I couldn’t complete this check.',summary:error.message||'Try again or verify the seller independently.',reasons:[],evidence:[],nextSteps:['Try again.'],limitations:['An incomplete check is not a verification result.']};panel.update(assessment,'error');pip.update({state:'error',label:'Check unavailable',message:assessment.summary,expanded:open});}
+  function fail(error){assessment={schemaVersion:1,scanId:'error',pageKey:location.origin+location.pathname,createdAt:new Date().toISOString(),mode:demoScenario(new URL(location.href))?'demo':'live',verdict:'error',identityStatus:'unverified',headline:'I couldn’t complete this check.',summary:error?.message||'Try again or verify the seller independently.',reasons:[],evidence:[],nextSteps:['Try again.'],limitations:['An incomplete check is not a verification result.']};panel.update(assessment,'error');pip.update({state:'error',label:'Check unavailable',message:assessment.summary,expanded:open});}
   const controller=createScanController({
     currentKey:getKey,
     collect:id=>collectObservation(document,location.href,id),
     assess:async(observation,{signal})=>{
-      const evidence=await collectEvidence(observation,{signal,providers:[]});
+      const evidence=await collectEvidence(observation,{signal});
       if(signal.aborted) throw new Error('Check cancelled.');
       const result=await evaluate(observation,evidence);
       const policyError=assessmentPolicyError(result,observation);if(policyError)throw new Error(policyError);
       return result;
     },
-    onChecking:()=>{assessment=null;open=true;dock(true);panel.update(null,'checking');panel.setOpen(true);pip.update({state:'checking',label:'Checking this store',message:'Looking at the available evidence.',expanded:true});},
+    onChecking:()=>{assessment=null;open=expandRequested;dock(open);panel.update(null,'checking');panel.setOpen(open);pip.update({state:'checking',label:'Checking this store',message:'Looking at the available evidence.',expanded:open});},
     onResult:result=>{assessment=result;panel.update(result,'complete');pip.update({state:pipState(result),label:result.headline,message:result.summary,expanded:open});},
     onError:fail
   });
-  function scan(){dismissedKey=null;return controller.scan();}
+  function scan(automatic=false){expandRequested=!automatic||innerWidth>=900;dismissedKey=null;return controller.scan();}
   function checkRoute(){
     const key=getKey(); const context=checkoutContext(document,new URL(location.href));
     if(lastContext?.key!==key){controller.invalidate();assessment=null;open=false;dock(false);panel.setOpen(false);pip.update({state:'idle',label:'Meet Pip',message:'A second opinion before you pay.',expanded:false});}
     const entering=context.detected&&(!lastContext?.detected||lastContext.key!==key);
     lastContext={key,detected:context.detected};
-    if(entering&&dismissedKey!==key) scan();
+    if(entering&&dismissedKey!==key) scan(true);
   }
   const observer=new MutationObserver(records=>{
     if(records.every(r=>r.target===host||host.contains(r.target))) return;

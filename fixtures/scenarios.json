@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": 1,
+  "owner": "S1",
+  "notes": "Canonical synthetic shop scenarios. C1 may read product, claims and links. C1 must ignore expected and syntheticIdentityEvidence. Expected outcomes are authored from planning/CONTRACTS.md, not from evaluate().",
+  "reasonKindVocabulary": [
+    "identity-mismatch",
+    "identity-unverified",
+    "identity-demo-match",
+    "deceptive-suffix",
+    "urgent-offer",
+    "unusual-payment",
+    "self-claimed-verification",
+    "self-asserted-reviews",
+    "https-not-identity",
+    "missing-identity",
+    "missing-returns",
+    "missing-contact",
+    "provider-unavailable",
+    "provider-error",
+    "provider-stale",
+    "sample-only"
+  ],
+  "directory": {
+    "label": "Sample Solehouse directory",
+    "sourceUrl": "https://sample-directory.example/solehouse",
+    "solehouseExactHost": "shop.solehouse.example"
+  },
+  "scenarios": [
+    {
+      "id": "suspicious-shoes",
+      "audience": "shop",
+      "displayName": "Suspicious outlet",
+      "claimedBrand": "Solehouse",
+      "simulatedHostname": "solehouse-outlet.example",
+      "protocol": "https:",
+      "bannerText": "FINAL HOURS · 90% OFF THE STUDIO RUNNER · BANK TRANSFER ONLY",
+      "description": "A fictional outlet listing for the Studio Runner. Product copy and history are made up. This is not a real shop.",
+      "demoDisclosure": "Fictional Solehouse outlet for the BeforePay demo. No real payments. Sample identity records only.",
+      "sizes": ["5", "6", "7", "8", "9", "10"],
+      "product": {
+        "name": "Studio Runner 01",
+        "price": 14,
+        "currency": "GBP",
+        "advertisedDiscountPercent": 90
+      },
+      "visibleClaims": [
+        "FINAL HOURS · 90% OFF THE STUDIO RUNNER · BANK TRANSFER ONLY",
+        "Reserve your pair today. Bank transfer only.",
+        "Official Solehouse partner",
+        "Verified store"
+      ],
+      "paymentClaims": [
+        "bank transfer only",
+        "details sent after order"
+      ],
+      "links": [
+        {
+          "label": "About the demo",
+          "hostname": "solehouse-outlet.example",
+          "pathname": "/about"
+        }
+      ],
+      "syntheticIdentityEvidence": [
+        {
+          "id": "syn-suspicious-identity",
+          "kind": "identity",
+          "status": "mismatch",
+          "sourceType": "synthetic",
+          "sourceLabel": "Sample Solehouse directory",
+          "sourceUrl": "https://sample-directory.example/solehouse",
+          "checkedAt": "2026-10-13T18:00:00.000Z",
+          "summary": "solehouse-outlet.example is not the recorded Solehouse host.",
+          "detail": "The sample directory lists Solehouse only at shop.solehouse.example. An outlet, partner, or lookalike hostname is not an exact-host match. This is sample data, not a real retailer record."
+        }
+      ],
+      "expected": {
+        "verdict": "warning",
+        "identityStatus": "mismatch",
+        "reasonKinds": [
+          "identity-mismatch",
+          "unusual-payment",
+          "urgent-offer",
+          "missing-returns",
+          "self-claimed-verification"
+        ]
+      }
+    },
+    {
+      "id": "matching-shoes",
+      "audience": "shop",
+      "displayName": "Matching demo store",
+      "claimedBrand": "Solehouse",
+      "simulatedHostname": "shop.solehouse.example",
+      "protocol": "https:",
+      "bannerText": "THOUGHTFULLY DESIGNED. EVERY DAY, EVERYWHERE.",
+      "description": "A fictional Solehouse product page used to demonstrate a sample directory match on the exact host. This is not a real shop.",
+      "demoDisclosure": "Sample seller. A directory match is not a guarantee of authenticity, delivery, or value. No real payments.",
+      "sizes": ["5", "6", "7", "8", "9", "10"],
+      "product": {
+        "name": "Studio Runner 01",
+        "price": 140,
+        "currency": "GBP",
+        "advertisedDiscountPercent": null
+      },
+      "visibleClaims": [
+        "THOUGHTFULLY DESIGNED. EVERY DAY, EVERYWHERE.",
+        "Sample seller · Cards accepted in this fictional scenario."
+      ],
+      "paymentClaims": [
+        "card accepted in this fictional scenario"
+      ],
+      "links": [
+        {
+          "label": "Contact",
+          "hostname": "shop.solehouse.example",
+          "pathname": "/contact"
+        },
+        {
+          "label": "Returns & refunds",
+          "hostname": "shop.solehouse.example",
+          "pathname": "/returns"
+        },
+        {
+          "label": "About the demo",
+          "hostname": "shop.solehouse.example",
+          "pathname": "/about"
+        }
+      ],
+      "syntheticIdentityEvidence": [
+        {
+          "id": "syn-matching-identity",
+          "kind": "identity",
+          "status": "matched",
+          "sourceType": "synthetic",
+          "sourceLabel": "Sample Solehouse directory",
+          "sourceUrl": "https://sample-directory.example/solehouse",
+          "checkedAt": "2026-10-13T18:00:00.000Z",
+          "summary": "Hostname shop.solehouse.example matches the synthetic Solehouse directory entry for this exact host.",
+          "detail": "Sample data only. Demo evidence yields a demo match, not independent verification of a real retailer. It does not confirm product authenticity, delivery, or a worthwhile purchase."
+        }
+      ],
+      "expected": {
+        "verdict": "no_flags",
+        "identityStatus": "demo_match",
+        "reasonKinds": [
+          "identity-demo-match",
+          "sample-only"
+        ]
+      }
+    },
+    {
+      "id": "unknown-shoes",
+      "audience": "shop",
+      "displayName": "North Quay Footwear",
+      "claimedBrand": "North Quay Footwear",
+      "simulatedHostname": "north-quay-footwear.example",
+      "protocol": "https:",
+      "bannerText": "NEW SEASON · QUAY COURT SNEAKER",
+      "description": "A fictional unknown boutique with a professional layout and on-page reviews. This is not a real shop.",
+      "demoDisclosure": "Unknown fictional seller. HTTPS and reviews printed on this page do not verify who runs the store. No real payments.",
+      "sizes": ["5", "6", "7", "8", "9", "10"],
+      "product": {
+        "name": "Quay Court Sneaker",
+        "price": 89,
+        "currency": "GBP",
+        "advertisedDiscountPercent": null
+      },
+      "visibleClaims": [
+        "NEW SEASON · QUAY COURT SNEAKER",
+        "4.9 stars from our customers",
+        "Verified Secure Checkout"
+      ],
+      "paymentClaims": [],
+      "links": [
+        {
+          "label": "Contact",
+          "hostname": "north-quay-footwear.example",
+          "pathname": "/contact"
+        },
+        {
+          "label": "Returns & refunds",
+          "hostname": "north-quay-footwear.example",
+          "pathname": "/returns"
+        },
+        {
+          "label": "About the demo",
+          "hostname": "north-quay-footwear.example",
+          "pathname": "/about"
+        }
+      ],
+      "syntheticIdentityEvidence": [],
+      "expected": {
+        "verdict": "uncertain",
+        "identityStatus": "unverified",
+        "reasonKinds": [
+          "identity-unverified",
+          "self-asserted-reviews"
+        ]
+      }
+    }
+  ]
+}

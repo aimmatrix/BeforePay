@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BeforePay · opening and closing</title>
+  <link rel="stylesheet" href="slides.css">
+</head>
+<body>
+  <div class="viewport" id="open">
+    <section class="slide" aria-label="Opening slide">
+      <div class="demo-bar">
+        <p class="demo-bar-copy">
+          <span class="demo-dot" aria-hidden="true"></span>
+          <span>BeforePay playground</span>
+          <strong>Fictional stores. No real payments.</strong>
+        </p>
+        <p class="demo-index">01 / 02</p>
+      </div>
+      <div class="slide-body">
+        <div class="copy">
+          <p class="eyebrow">The demo</p>
+          <h1>You found the shoes.<br>You do not know the store.</h1>
+          <p class="lede">Solehouse is selling the Studio Runner 01. In the suspicious scenario the page says 90% off, £14 instead of £140, and bank transfer only. A finished-looking page leaves the seller, the offer and the payment request unchecked.</p>
+          <p class="price"><strong>£14.00</strong><del>£140.00</del><span class="discount">90% off</span></p>
+          <p class="limit">Suspicious scenario. Bank transfer only. No card details are collected and no money will move.</p>
+        </div>
+        <figure class="art">
+          <div class="art-top">
+            <span>Made for your<br>everyday detour.</span>
+            <span>01 / 03</span>
+          </div>
+          <span class="giant-type" aria-hidden="true">RUN<br>WITH IT.</span>
+          <img class="shoe" src="assets/shoe.svg" alt="Illustration of a cream and burnt-orange trainer, the Studio Runner 01">
+          <div class="art-bottom">
+            <span>Designed to go places.</span>
+            <span>The Studio Runner</span>
+          </div>
+        </figure>
+      </div>
+    </section>
+  </div>
+
+  <div class="viewport" id="close">
+    <section class="slide" aria-label="Closing slide">
+      <div class="demo-bar">
+        <p class="demo-bar-copy">
+          <span class="demo-dot" aria-hidden="true"></span>
+          <span>BeforePay playground</span>
+          <strong>Fictional stores. No real payments.</strong>
+        </p>
+        <p class="demo-index">02 / 02</p>
+      </div>
+      <div class="slide-body">
+        <div class="copy">
+          <p class="eyebrow">BeforePay</p>
+          <h1>A second opinion<br>before you pay.</h1>
+          <p class="lede">Pip is a small shield with eyes and arms. At checkout, Pip shows what deserves a closer look. The evidence engine decides the findings. Pip does not verify a store by itself.</p>
+          <ol>
+            <li><span>01</span>A Chrome extension on a local fictional checkout.</li>
+            <li><span>02</span>It separates identity evidence, warning signs, missing checks and the purchase.</li>
+            <li><span>03</span>A directory match in this demo is sample-only. Identity evidence does not promise authentic shoes, delivery, or a worthwhile buy.</li>
+          </ol>
+          <p class="limit">Sample demonstration. Not a real store check. This is not a guarantee of identity, delivery, authenticity, or a worthwhile purchase.</p>
+        </div>
+        <figure class="art pip-art">
+          <div class="art-top">
+            <span>The guardian</span>
+            <span>Pip</span>
+          </div>
+          <img class="pip" src="assets/pip.svg" alt="Pip, a small shield-shaped guardian with eyes and arms">
+          <div class="art-bottom">
+            <span>At checkout</span>
+            <span>A small guardian</span>
+          </div>
+        </figure>
+      </div>
+    </section>
+  </div>
+  <script>
+    function fit() {
+      const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+      document.documentElement.style.setProperty("--fit", String(scale));
+    }
+    fit();
+    window.addEventListener("resize", fit);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") location.hash = "close";
+      if (event.key === "ArrowLeft" || event.key === "ArrowUp") location.hash = "open";
+    });
+  </script>
+</body>
+</html>

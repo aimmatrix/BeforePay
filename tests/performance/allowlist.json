@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "notes": "Origins the local demo and extension may contact in the first build. CORE may extend this after a documented provider decision. Empty remoteEvidenceOrigins means no independent live lookups. ignoredExactUrls are SVG namespaces and URL-constructor bases, not fetches.",
+  "demoHttpOrigins": [
+    "http://127.0.0.1:4173",
+    "http://localhost:4173",
+    "http://127.0.0.1:4174",
+    "http://localhost:4174"
+  ],
+  "ignoredExactUrls": [
+    "http://www.w3.org/2000/svg",
+    "https://www.w3.org/2000/svg",
+    "http://localhost",
+    "http://127.0.0.1"
+  ],
+  "remoteEvidenceOrigins": [],
+  "forbiddenSubstrings": [
+    "googleapis.com",
+    "gstatic.com",
+    "fonts.gstatic.com",
+    "cdn.jsdelivr.net",
+    "unpkg.com",
+    "cdnjs.cloudflare.com",
+    "google-analytics.com",
+    "googletagmanager.com",
+    "segment.io",
+    "sentry.io",
+    "openai.com",
+    "anthropic.com",
+    "api.openai.com"
+  ],
+  "allowedNpmPackages": [],
+  "allowedDevNpmPackages": ["esbuild"]
+}

@@ -1,0 +1,541 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": 1,
+  "owner": "S1",
+  "audience": "evaluator",
+  "notes": "Independent expected outcomes from planning/CONTRACTS.md. These are not demoScenarioId values. Tests must assert this JSON, not whatever evaluate() returns.",
+  "reasonKindVocabulary": [
+    "identity-mismatch",
+    "identity-unverified",
+    "identity-demo-match",
+    "deceptive-suffix",
+    "urgent-offer",
+    "unusual-payment",
+    "self-claimed-verification",
+    "self-asserted-reviews",
+    "https-not-identity",
+    "missing-identity",
+    "missing-returns",
+    "missing-contact",
+    "provider-unavailable",
+    "provider-error",
+    "provider-stale",
+    "sample-only"
+  ],
+  "hostnameComparisonVectors": [
+    {
+      "id": "host-deceptive-suffix",
+      "claimedBrand": "Solehouse",
+      "registeredHostname": "shop.solehouse.example",
+      "observedHostname": "officialsolehouse.example.attacker.example",
+      "mustMatch": false
+    },
+    {
+      "id": "host-officialbrand-attacker-suffix",
+      "claimedBrand": "OfficialBrand",
+      "registeredHostname": "officialbrand.example",
+      "observedHostname": "officialbrand.example.attacker.example",
+      "mustMatch": false
+    },
+    {
+      "id": "host-lookalike-prefix-suffix",
+      "claimedBrand": "Solehouse",
+      "registeredHostname": "shop.solehouse.example",
+      "observedHostname": "solehouse.example.attacker.example",
+      "mustMatch": false
+    },
+    {
+      "id": "host-hyphenated-outlet",
+      "claimedBrand": "Solehouse",
+      "registeredHostname": "shop.solehouse.example",
+      "observedHostname": "solehouse-outlet.example",
+      "mustMatch": false
+    },
+    {
+      "id": "host-brand-substring",
+      "claimedBrand": "Solehouse",
+      "registeredHostname": "shop.solehouse.example",
+      "observedHostname": "not-solehouse.example",
+      "mustMatch": false
+    },
+    {
+      "id": "host-exact",
+      "claimedBrand": "Solehouse",
+      "registeredHostname": "shop.solehouse.example",
+      "observedHostname": "shop.solehouse.example",
+      "mustMatch": true
+    }
+  ],
+  "vectors": [
+    {
+      "id": "deceptive-suffix",
+      "audience": "evaluator",
+      "displayName": "Deceptive attacker suffix claiming Solehouse",
+      "notes": "Naive includes('solehouse') or suffix comparison must not match.",
+      "observation": {
+        "schemaVersion": 1,
+        "scanId": "vec-deceptive-suffix",
+        "pageKey": "https://officialsolehouse.example.attacker.example/checkout",
+        "capturedAt": "2026-10-13T18:00:00.000Z",
+        "hostname": "officialsolehouse.example.attacker.example",
+        "protocol": "https:",
+        "checkoutDetected": true,
+        "checkoutSignals": [
+          "Checkout route"
+        ],
+        "visibleTextExcerpt": "Official Solehouse online shop. Studio Runner 01. Final hours. Pay after we email transfer details.",
+        "links": [
+          {
+            "label": "About",
+            "hostname": "officialsolehouse.example.attacker.example",
+            "pathname": "/about"
+          }
+        ],
+        "advertisedDiscountPercent": 90,
+        "paymentClaims": [
+          "bank transfer only"
+        ],
+        "demoScenarioId": null
+      },
+      "evidence": [
+        {
+          "id": "vec-suffix-identity",
+          "kind": "identity",
+          "status": "mismatch",
+          "sourceType": "synthetic",
+          "sourceLabel": "Sample Solehouse directory",
+          "sourceUrl": "https://sample-directory.example/solehouse",
+          "checkedAt": "2026-10-13T18:00:00.000Z",
+          "summary": "officialsolehouse.example.attacker.example is not shop.solehouse.example.",
+          "detail": "The sample directory lists Solehouse only at shop.solehouse.example. A shared brand string or .example suffix is not an exact-host match."
+        },
+        {
+          "id": "vec-suffix-domain",
+          "kind": "domain",
+          "status": "mismatch",
+          "sourceType": "synthetic",
+          "sourceLabel": "Sample host comparison",
+          "sourceUrl": null,
+          "checkedAt": "2026-10-13T18:00:00.000Z",
+          "summary": "The observed host uses a deceptive attacker.example suffix.",
+          "detail": "officialbrand.example.attacker.example style hosts are a different registrable name from the brand's recorded host."
+        }
+      ],
+      "expected": {
+        "verdict": "warning",
+        "identityStatus": "mismatch",
+        "reasonKinds": [
+          "deceptive-suffix",
+          "identity-mismatch"
+        ],
+        "forbiddenVerdicts": [
+          "no_flags"
+        ],
+        "forbiddenIdentityStatuses": [
+          "verified",
+          "demo_match"
+        ]
+      }
+    },
+    {
+      "id": "https-only-unknown",
+      "audience": "evaluator",
+      "displayName": "HTTPS-only unknown seller",
+      "notes": "Transport encryption is not identity evidence. Isolates HTTPS from urgency and off-platform payment.",
+      "observation": {
+        "schemaVersion": 1,
+        "scanId": "vec-https-only",
+        "pageKey": "https://kiln-bridge-shoes.example/checkout",
+        "capturedAt": "2026-10-13T18:00:00.000Z",
+        "hostname": "kiln-bridge-shoes.example",
+        "protocol": "https:",
+        "checkoutDetected": true,
+        "checkoutSignals": [
+          "Checkout route"
+        ],
+        "visibleTextExcerpt": "Kiln Bridge Shoes. Bridge Court Trainer. 96 GBP. Quiet materials. Cards accepted in this fictional listing.",
+        "links": [
+          {
+            "label": "Contact",
+            "hostname": "kiln-bridge-shoes.example",
+            "pathname": "/contact"
+          },
+          {
+            "label": "Returns",
+            "hostname": "kiln-bridge-shoes.example",
+            "pathname": "/returns"
+          }
+        ],
+        "advertisedDiscountPercent": null,
+        "paymentClaims": [],
+        "demoScenarioId": null
+      },
+      "evidence": [
+        {
+          "id": "vec-https-transport",
+          "kind": "transport",
+          "status": "observed",
+          "sourceType": "page",
+          "sourceLabel": "Page protocol",
+          "sourceUrl": null,
+          "checkedAt": "2026-10-13T18:00:00.000Z",
+          "summary": "The page was served over HTTPS.",
+          "detail": "HTTPS encrypts transit. It does not establish who operates the shop."
+        },
+        {
+          "id": "vec-https-identity",
+          "kind": "identity",
+          "status": "not_checked",
+          "sourceType": "independent",
+          "sourceLabel": "Independent identity source",
+          "sourceUrl": null,
+          "checkedAt": null,
+          "summary": "Seller identity was not independently checked.",
+          "detail": "No independent source is connected for kiln-bridge-shoes.example. A lock icon is not a directory match."
+        }
+      ],
+      "expected": {
+        "verdict": "uncertain",
+        "identityStatus": "unverified",
+        "reasonKinds": [
+          "identity-unverified",
+          "https-not-identity"
+        ],
+        "forbiddenVerdicts": [
+          "no_flags"
+        ],
+        "forbiddenIdentityStatuses": [
+          "verified",
+          "demo_match",
+          "mismatch"
+        ],
+        "degradedEvidenceIds": [
+          "vec-https-identity"
+        ]
+      }
+    },
+    {
+      "id": "missing-checks",
+      "audience": "evaluator",
+      "displayName": "Missing identity and returns checks",
+      "notes": "not_checked core evidence cannot become a clean result.",
+      "observation": {
+        "schemaVersion": 1,
+        "scanId": "vec-missing-checks",
+        "pageKey": "https://harbourlane-shoes.example/checkout",
+        "capturedAt": "2026-10-13T18:00:00.000Z",
+        "hostname": "harbourlane-shoes.example",
+        "protocol": "https:",
+        "checkoutDetected": true,
+        "checkoutSignals": [
+          "Checkout route"
+        ],
+        "visibleTextExcerpt": "Harbourlane Shoes. Harbour Low Sneaker. 95 GBP. A calm fictional listing.",
+        "links": [],
+        "advertisedDiscountPercent": null,
+        "paymentClaims": [],
+        "demoScenarioId": null
+      },
+      "evidence": [
+        {
+          "id": "vec-missing-identity",
+          "kind": "identity",
+          "status": "not_checked",
+          "sourceType": "independent",
+          "sourceLabel": "Independent identity source",
+          "sourceUrl": null,
+          "checkedAt": null,
+          "summary": "Seller identity was not checked.",
+          "detail": "No independent source was queried. Missing identity evidence keeps the result uncertain."
+        },
+        {
+          "id": "vec-missing-returns",
+          "kind": "returns",
+          "status": "not_checked",
+          "sourceType": "page",
+          "sourceLabel": "Visible page observation",
+          "sourceUrl": null,
+          "checkedAt": null,
+          "summary": "Returns information was not checked.",
+          "detail": "This page snapshot has no returns link. A missing check is not proof of fraud and is not a clean result."
+        }
+      ],
+      "expected": {
+        "verdict": "uncertain",
+        "identityStatus": "unverified",
+        "reasonKinds": [
+          "missing-identity",
+          "missing-returns"
+        ],
+        "forbiddenVerdicts": [
+          "no_flags"
+        ],
+        "forbiddenIdentityStatuses": [
+          "verified",
+          "demo_match"
+        ],
+        "degradedEvidenceIds": [
+          "vec-missing-identity",
+          "vec-missing-returns"
+        ]
+      }
+    },
+    {
+      "id": "identity-conflict",
+      "audience": "evaluator",
+      "displayName": "Conflicting synthetic identity records",
+      "notes": "Two sample directories disagree for the same host. Never verified or demo_match while conflict remains.",
+      "observation": {
+        "schemaVersion": 1,
+        "scanId": "vec-identity-conflict",
+        "pageKey": "https://lane-end-runners.example/checkout",
+        "capturedAt": "2026-10-13T18:00:00.000Z",
+        "hostname": "lane-end-runners.example",
+        "protocol": "https:",
+        "checkoutDetected": true,
+        "checkoutSignals": [
+          "Checkout route"
+        ],
+        "visibleTextExcerpt": "Solehouse. Official studio listing. Lane End Runner. 120 GBP.",
+        "links": [
+          {
+            "label": "Contact",
+            "hostname": "lane-end-runners.example",
+            "pathname": "/contact"
+          }
+        ],
+        "advertisedDiscountPercent": null,
+        "paymentClaims": [],
+        "demoScenarioId": null
+      },
+      "evidence": [
+        {
+          "id": "vec-conflict-solehouse",
+          "kind": "identity",
+          "status": "matched",
+          "sourceType": "synthetic",
+          "sourceLabel": "Sample Solehouse directory",
+          "sourceUrl": "https://sample-directory.example/solehouse",
+          "checkedAt": "2026-10-13T18:00:00.000Z",
+          "summary": "Sample record lists lane-end-runners.example as Solehouse.",
+          "detail": "This is one sample directory row. Another sample row for the same host names a different organisation."
+        },
+        {
+          "id": "vec-conflict-harbor",
+          "kind": "identity",
+          "status": "matched",
+          "sourceType": "synthetic",
+          "sourceLabel": "Sample Harbor Athletics directory",
+          "sourceUrl": "https://sample-directory.example/harbor-athletics",
+          "checkedAt": "2026-10-13T18:00:00.000Z",
+          "summary": "Sample record lists lane-end-runners.example as Harbor Athletics.",
+          "detail": "Conflicting sample identity records cannot produce a demo match or independent verification."
+        }
+      ],
+      "expected": {
+        "verdict": "warning",
+        "identityStatus": "mismatch",
+        "reasonKinds": [
+          "identity-mismatch"
+        ],
+        "forbiddenVerdicts": [
+          "no_flags"
+        ],
+        "forbiddenIdentityStatuses": [
+          "verified",
+          "demo_match"
+        ]
+      }
+    },
+    {
+      "id": "provider-timeout",
+      "audience": "evaluator",
+      "displayName": "Identity lookup unavailable after timeout",
+      "notes": "Timeout is typed as unavailable. A host that would otherwise match still cannot become demo_match.",
+      "observation": {
+        "schemaVersion": 1,
+        "scanId": "vec-provider-timeout",
+        "pageKey": "https://shop.solehouse.example/checkout",
+        "capturedAt": "2026-10-13T18:00:00.000Z",
+        "hostname": "shop.solehouse.example",
+        "protocol": "https:",
+        "checkoutDetected": true,
+        "checkoutSignals": [
+          "Demo checkout route"
+        ],
+        "visibleTextExcerpt": "Solehouse. Studio Runner 01. 140 GBP. Sample seller. Cards accepted in this fictional scenario.",
+        "links": [
+          {
+            "label": "Contact",
+            "hostname": "shop.solehouse.example",
+            "pathname": "/contact"
+          },
+          {
+            "label": "Returns & refunds",
+            "hostname": "shop.solehouse.example",
+            "pathname": "/returns"
+          }
+        ],
+        "advertisedDiscountPercent": null,
+        "paymentClaims": [
+          "card accepted in this fictional scenario"
+        ],
+        "demoScenarioId": null
+      },
+      "evidence": [
+        {
+          "id": "vec-timeout-identity",
+          "kind": "identity",
+          "status": "unavailable",
+          "sourceType": "independent",
+          "sourceLabel": "Independent identity source",
+          "sourceUrl": null,
+          "checkedAt": null,
+          "summary": "Identity lookup did not complete in time.",
+          "detail": "The provider did not respond. Unavailable identity evidence is not a directory match."
+        }
+      ],
+      "expected": {
+        "verdict": "uncertain",
+        "identityStatus": "unverified",
+        "reasonKinds": [
+          "provider-unavailable",
+          "missing-identity"
+        ],
+        "forbiddenVerdicts": [
+          "no_flags"
+        ],
+        "forbiddenIdentityStatuses": [
+          "verified",
+          "demo_match"
+        ],
+        "degradedEvidenceIds": [
+          "vec-timeout-identity"
+        ]
+      }
+    },
+    {
+      "id": "provider-error",
+      "audience": "evaluator",
+      "displayName": "Identity provider error",
+      "notes": "A hard provider error cannot become a clean result. Identity stays unverified.",
+      "observation": {
+        "schemaVersion": 1,
+        "scanId": "vec-provider-error",
+        "pageKey": "https://shop.solehouse.example/checkout",
+        "capturedAt": "2026-10-13T18:00:00.000Z",
+        "hostname": "shop.solehouse.example",
+        "protocol": "https:",
+        "checkoutDetected": true,
+        "checkoutSignals": [
+          "Demo checkout route"
+        ],
+        "visibleTextExcerpt": "Solehouse. Studio Runner 01. 140 GBP. Sample seller. Cards accepted in this fictional scenario.",
+        "links": [
+          {
+            "label": "Contact",
+            "hostname": "shop.solehouse.example",
+            "pathname": "/contact"
+          }
+        ],
+        "advertisedDiscountPercent": null,
+        "paymentClaims": [],
+        "demoScenarioId": null
+      },
+      "evidence": [
+        {
+          "id": "vec-error-identity",
+          "kind": "identity",
+          "status": "error",
+          "sourceType": "independent",
+          "sourceLabel": "Independent identity source",
+          "sourceUrl": null,
+          "checkedAt": "2026-10-13T18:00:02.000Z",
+          "summary": "Identity check failed with a provider error.",
+          "detail": "The provider returned an error. Page observations remain visible. This is not a favourable identity finding."
+        }
+      ],
+      "expected": {
+        "verdict": "error",
+        "identityStatus": "unverified",
+        "reasonKinds": [
+          "provider-error"
+        ],
+        "forbiddenVerdicts": [
+          "no_flags"
+        ],
+        "forbiddenIdentityStatuses": [
+          "verified",
+          "demo_match"
+        ],
+        "degradedEvidenceIds": [
+          "vec-error-identity"
+        ]
+      }
+    },
+    {
+      "id": "provider-stale",
+      "audience": "evaluator",
+      "displayName": "Stale sample identity record",
+      "notes": "Stale sample data cannot become demo_match.",
+      "observation": {
+        "schemaVersion": 1,
+        "scanId": "vec-provider-stale",
+        "pageKey": "https://shop.solehouse.example/checkout",
+        "capturedAt": "2026-10-13T18:00:00.000Z",
+        "hostname": "shop.solehouse.example",
+        "protocol": "https:",
+        "checkoutDetected": true,
+        "checkoutSignals": [
+          "Demo checkout route"
+        ],
+        "visibleTextExcerpt": "Solehouse. Studio Runner 01. 140 GBP. Sample seller. Cards accepted in this fictional scenario.",
+        "links": [
+          {
+            "label": "Contact",
+            "hostname": "shop.solehouse.example",
+            "pathname": "/contact"
+          },
+          {
+            "label": "Returns & refunds",
+            "hostname": "shop.solehouse.example",
+            "pathname": "/returns"
+          }
+        ],
+        "advertisedDiscountPercent": null,
+        "paymentClaims": [],
+        "demoScenarioId": null
+      },
+      "evidence": [
+        {
+          "id": "vec-stale-identity",
+          "kind": "identity",
+          "status": "stale",
+          "sourceType": "synthetic",
+          "sourceLabel": "Sample Solehouse directory",
+          "sourceUrl": "https://sample-directory.example/solehouse",
+          "checkedAt": "2026-01-02T09:00:00.000Z",
+          "summary": "Sample directory previously listed this host as Solehouse; the record is stale.",
+          "detail": "A stale sample row cannot be treated as a current demo match or as independent verification."
+        }
+      ],
+      "expected": {
+        "verdict": "uncertain",
+        "identityStatus": "unverified",
+        "reasonKinds": [
+          "provider-stale"
+        ],
+        "forbiddenVerdicts": [
+          "no_flags"
+        ],
+        "forbiddenIdentityStatuses": [
+          "verified",
+          "demo_match"
+        ],
+        "degradedEvidenceIds": [
+          "vec-stale-identity"
+        ]
+      }
+    }
+  ]
+}

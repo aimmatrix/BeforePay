@@ -1,6 +1,6 @@
-# BeforePay interface agreement — proposed v1
+# BeforePay interface agreement — frozen v1
 
-Planning contract only. CORE and RISK ratify at kickoff, then CORE publishes runtime types/stubs under src/contracts/. These signatures are not implemented yet. Producers and consumers must use the same contract version. No agent silently alters a field or invents another status.
+Build kickoff authorized. CORE froze v1 and published runtime boundary validators under src/contracts/. Runtime and delivered components implement these interfaces. Producers and consumers must use the same contract version. No agent silently alters a field or invents another status.
 
 ## Observation and evidence
 

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BeforePay panel preview</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #efe8d8;
+        color: #1e2a24;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+      }
+      body {
+        display: grid;
+        grid-template-columns: minmax(16rem, 22rem) minmax(18rem, 26rem);
+        gap: 24px;
+        padding: 24px;
+        align-items: start;
+      }
+      .preview-note {
+        padding: 12px 14px;
+        border: 1px solid #e4ddd0;
+        border-radius: 10px;
+        background: #fffcf6;
+        font-size: 0.9rem;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-family: ui-serif, Palatino, Georgia, serif;
+        font-size: 1.5rem;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 16px 0;
+      }
+      button[data-view] {
+        min-height: 44px;
+        padding: 8px 12px;
+        border: 1px solid #c9c0ae;
+        border-radius: 8px;
+        background: #f6f1e7;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+      }
+      button[data-view][aria-pressed='true'] {
+        border-color: #3f6b52;
+        background: #e4eee6;
+      }
+      #event-log {
+        width: 100%;
+        min-height: 8rem;
+        margin: 0;
+        padding: 8px;
+        border: 1px solid #e4ddd0;
+        border-radius: 8px;
+        background: #fffcf6;
+        font: 12px/1.4 ui-monospace, Menlo, monospace;
+        white-space: pre-wrap;
+      }
+      #panel-host {
+        width: 100%;
+        max-width: 26rem;
+      }
+      #state-label {
+        margin: 0 0 12px;
+        color: #5c675f;
+        font-size: 0.875rem;
+      }
+      @media (max-width: 720px) {
+        body {
+          grid-template-columns: 1fr;
+          padding: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <aside>
+      <p class="preview-note">
+        This is a <strong>panel preview</strong>, not evidence that the BeforePay
+        extension is installed or protecting a real purchase. Fixtures are
+        synthetic. Pip, Chrome messaging, and risk decisions are out of scope.
+      </p>
+      <h1>Evidence panel</h1>
+      <p id="state-label">warning</p>
+      <div class="controls" role="group" aria-label="Panel views">
+        <button type="button" data-view="idle">Idle</button>
+        <button type="button" data-view="checking">Checking</button>
+        <button type="button" data-view="warning" aria-pressed="true">Warning</button>
+        <button type="button" data-view="uncertain">Uncertain</button>
+        <button type="button" data-view="demo-match">Demo match</button>
+        <button type="button" data-view="no-flags">No flags</button>
+        <button type="button" data-view="error">Error</button>
+        <button type="button" data-view="phase-error">Phase error</button>
+        <button type="button" data-view="closed">Closed</button>
+      </div>
+      <h2>Callback log</h2>
+      <pre id="event-log"></pre>
+    </aside>
+    <div id="panel-host"></div>
+    <script type="module" src="./preview.js"></script>
+  </body>
+</html>

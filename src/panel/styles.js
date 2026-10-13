@@ -1,0 +1,367 @@
+/**
+ * Runtime copy of panel.css so mountPanel can inject styles into the supplied
+ * root without a bundler or fetch. Keep in sync with panel.css.
+ */
+export const PANEL_CSS = `.bp-panel {
+  --bp-cream: #f6f1e7;
+  --bp-surface: #fffcf6;
+  --bp-ink: #1e2a24;
+  --bp-muted: #5c675f;
+  --bp-sage: #3f6b52;
+  --bp-sage-soft: #e4eee6;
+  --bp-amber: #8a5a12;
+  --bp-amber-soft: #f4ead6;
+  --bp-rust: #9c3b2a;
+  --bp-rust-soft: #f4e4de;
+  --bp-line: #e4ddd0;
+  --bp-focus: #3f6b52;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: min(70vh, 34rem);
+  color: var(--bp-ink);
+  background: var(--bp-cream);
+  border: 1px solid var(--bp-line);
+  border-radius: 14px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  overflow: hidden;
+}
+
+.bp-panel *,
+.bp-panel *::before,
+.bp-panel *::after {
+  box-sizing: border-box;
+}
+
+.bp-panel[hidden],
+.bp-panel[data-open='false'] {
+  display: none;
+}
+
+.bp-panel:focus {
+  outline: none;
+}
+
+.bp-panel:focus-visible,
+.bp-panel :focus-visible {
+  outline: 2px solid var(--bp-focus);
+  outline-offset: 2px;
+}
+
+.bp-chrome {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--bp-line);
+  background: var(--bp-surface);
+}
+
+.bp-stripe {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.bp-icon {
+  flex: none;
+  display: block;
+}
+
+.bp-icon-checking {
+  animation: bp-spin 0.9s linear infinite;
+}
+
+.bp-status-word {
+  font-family: ui-serif, 'Iowan Old Style', Palatino, Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.bp-status-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.bp-close {
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+  margin: -8px -8px -8px 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--bp-ink);
+  font: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.bp-close:hover {
+  background: var(--bp-sage-soft);
+}
+
+.bp-identity-row,
+.bp-demo-banner {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--bp-line);
+}
+
+.bp-identity-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.bp-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  padding: 0 8px;
+  border: 1px solid var(--bp-line);
+  border-radius: 999px;
+  background: var(--bp-surface);
+  color: var(--bp-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.bp-chip-sample {
+  border-color: var(--bp-sage);
+  color: var(--bp-sage);
+}
+
+.bp-demo-banner {
+  background: var(--bp-sage-soft);
+  color: var(--bp-sage);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.bp-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px;
+  background: var(--bp-cream);
+}
+
+.bp-headline {
+  margin: 0 0 8px;
+  font-family: ui-serif, 'Iowan Old Style', Palatino, Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.bp-summary {
+  margin: 0 0 16px;
+  color: var(--bp-ink);
+}
+
+.bp-section {
+  margin: 0 0 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--bp-line);
+}
+
+.bp-section:last-child {
+  margin-bottom: 0;
+}
+
+.bp-section-title {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bp-muted);
+}
+
+.bp-reason,
+.bp-evidence,
+.bp-step {
+  margin: 0 0 12px;
+}
+
+.bp-reason:last-child,
+.bp-evidence:last-child,
+.bp-step:last-child {
+  margin-bottom: 0;
+}
+
+.bp-reason-title,
+.bp-evidence-title {
+  margin: 0 0 4px;
+  font-weight: 650;
+}
+
+.bp-reason[data-severity='warning'] .bp-reason-title {
+  color: var(--bp-rust);
+}
+
+.bp-reason[data-severity='unknown'] .bp-reason-title {
+  color: var(--bp-amber);
+}
+
+.bp-reason-detail,
+.bp-evidence-detail,
+.bp-step,
+.bp-limit {
+  margin: 0;
+  color: var(--bp-ink);
+}
+
+.bp-reason-sources,
+.bp-evidence-meta {
+  margin: 4px 0 0;
+  color: var(--bp-muted);
+  font-size: 0.875rem;
+}
+
+.bp-evidence-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.bp-steps {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.bp-step {
+  margin-bottom: 6px;
+}
+
+.bp-limit {
+  margin-bottom: 8px;
+  color: var(--bp-muted);
+  font-size: 0.875rem;
+}
+
+.bp-guarantee {
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--bp-line);
+  color: var(--bp-muted);
+  font-size: 0.875rem;
+}
+
+.bp-footer {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--bp-line);
+  background: var(--bp-surface);
+}
+
+.bp-button {
+  flex: 1 1 0;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--bp-line);
+  border-radius: 10px;
+  background: var(--bp-cream);
+  color: var(--bp-ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bp-button-primary {
+  border-color: var(--bp-sage);
+  background: var(--bp-sage);
+  color: #f6f1e7;
+}
+
+.bp-button:hover:not(:disabled) {
+  filter: brightness(0.97);
+}
+
+.bp-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bp-panel[data-view='warning'] .bp-chrome {
+  background: var(--bp-rust-soft);
+  color: var(--bp-rust);
+}
+
+.bp-panel[data-view='uncertain'] .bp-chrome {
+  background: var(--bp-amber-soft);
+  color: var(--bp-amber);
+}
+
+.bp-panel[data-view='error'] .bp-chrome {
+  background: var(--bp-rust-soft);
+  color: var(--bp-rust);
+}
+
+.bp-panel[data-view='checking'] .bp-chrome,
+.bp-panel[data-view='demo-match'] .bp-chrome,
+.bp-panel[data-view='no-flags'] .bp-chrome,
+.bp-panel[data-view='idle'] .bp-chrome {
+  background: var(--bp-sage-soft);
+  color: var(--bp-sage);
+}
+
+.bp-source-link {
+  color: var(--bp-sage);
+  text-decoration: underline;
+}
+
+.bp-url-withheld {
+  color: var(--bp-muted);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 420px) {
+  .bp-chrome,
+  .bp-body,
+  .bp-footer,
+  .bp-identity-row,
+  .bp-demo-banner {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .bp-headline {
+    font-size: 1.125rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bp-icon-checking {
+    animation: none;
+  }
+
+  .bp-panel,
+  .bp-button,
+  .bp-close {
+    transition: none;
+  }
+}
+
+@keyframes bp-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+`;
